@@ -3,31 +3,7 @@ import java.util.*;
 
 public class Conversor {
 
-    private static final String API_KEY = resolveApiKey();
-
-    private static String resolveApiKey() {
-        // 1) Variable de entorno
-        String k = System.getenv("EXCHANGE_API_KEY");
-        if (k != null && !k.isBlank()) return k;
-
-        // 2) Propiedad de sistema: -DEXCHANGE_API_KEY=xxx
-        k = System.getProperty("EXCHANGE_API_KEY");
-        if (k != null && !k.isBlank()) return k;
-
-        // 3) Archivo local (NO versionado): config.properties
-        try (java.io.InputStream in = new java.io.FileInputStream("config.properties")) {
-            java.util.Properties p = new java.util.Properties();
-            p.load(in);
-            k = p.getProperty("EXCHANGE_API_KEY");
-            if (k != null && !k.isBlank()) return k;
-        } catch (java.io.IOException ignored) {}
-
-        throw new IllegalStateException(
-                "Falta EXCHANGE_API_KEY. Configúrala como variable de entorno, " +
-                        "propiedad del sistema o en config.properties (no lo subas al repo)."
-        );
-    }
-
+    private static final String API_KEY = "eaea8684f3b1764fc4e0f206";
     private static final String API_BASE = "https://v6.exchangerate-api.com/v6/";
 
     // Monedas soportadas (filtradas)
