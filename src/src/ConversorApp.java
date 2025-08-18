@@ -24,8 +24,20 @@ public class ConversorApp {
 
         HttpResponse<String> respuesta = client.send(request, HttpResponse.BodyHandlers.ofString());
 
+        int statusCode = respuesta.statusCode();
+        if (statusCode != 200) {
+            System.out.println("Error en la solicitud. Código de estado: " + statusCode);
+            return 0.0;
+        }
+
+        var headers = respuesta.headers();
+        System.out.println("date: " + headers.firstValue("date").orElse("N/A"));
+        System.out.println("content-type: " + headers.firstValue("content-type").orElse("N/A"));
+
+        String body = respuesta.body();
+
         //Conversión a JSON
-        JsonElement elemento = JsonParser.parseString(respuesta.body());
+        JsonElement elemento = JsonParser.parseString(body);
         JsonObject objectRoot = elemento.getAsJsonObject();
 
         //Accediendo a JsonObject
