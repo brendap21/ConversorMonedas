@@ -1,0 +1,4 @@
+# Claves y configs locales
+config.properties
+.env
+*.env
