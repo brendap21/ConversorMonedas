@@ -1,0 +1,37 @@
+name: CI - Build ConversorMonedas
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    env:
+      EXCHANGE_API_KEY: ${{ secrets.EXCHANGE_API_KEY }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - name: Prepare libs (Gson)
+        run: |
+          mkdir -p libs classes
+          curl -L -o libs/gson-2.10.1.jar https://repo1.maven.org/maven2/com/google/code/gson/gson/2.10.1/gson-2.10.1.jar
+
+      - name: Compile (javac)
+        run: |
+          javac -cp libs/gson-2.10.1.jar -d classes src/src/*.java
+
+      - name: Run SmokeTest (no interactivo)
+        run: |
+          java -cp "classes:libs/gson-2.10.1.jar" SmokeTest
+        env:
+          EXCHANGE_API_KEY: ${{ secrets.EXCHANGE_API_KEY }}
