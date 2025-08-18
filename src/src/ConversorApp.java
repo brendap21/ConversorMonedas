@@ -1,7 +1,5 @@
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.Gson;
 import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
@@ -36,12 +34,11 @@ public class ConversorApp {
 
         String body = respuesta.body();
 
-        //Conversión a JSON
-        JsonElement elemento = JsonParser.parseString(body);
-        JsonObject objectRoot = elemento.getAsJsonObject();
-
-        //Accediendo a JsonObject
-        double tasa = objectRoot.get("conversion_rate").getAsDouble();
-        return tasa;
+        TasaResponse tasa = new Gson().fromJson(body, TasaResponse.class);
+        if (tasa == null || !"success".equals(tasa.getResult())) {
+            System.out.println("Error en la respuesta: " + (tasa != null ? tasa.getResult() : "N/A"));
+            return 0.0;
+        }
+        return tasa.getConversion_rate();
     }
 }
